@@ -18,9 +18,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dd', function () {
-    return $user = Auth::user();
-})->name('dd');
+// Route::get('/dd', function () {
+//     return $user = Auth::user();
+// })->name('dd');
 
 Auth::routes();
 
