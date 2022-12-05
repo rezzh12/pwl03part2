@@ -1,21 +1,26 @@
 @extends('adminlte::page')
 
-@section('title', 'Home_Page')
+@section('title', 'Home Page')
 
 @section('content_header')
-<h1 class="m-0 text-dark">Data Buku</h1>
+<h1>Data Buku</h1>
 @stop
 
 @section('content')
 <div class="container-fluid">
     <div class="card card-default">
-        <div class="card-header"> {{ __('PengelolaanBuku')}}</div>
+        <div class="card-header">{{ __('Pengelolaan Buku') }}</div>
         <div class="card-body">
+            <!-- Button Tambah Data -->
             <button class="btn btn-primary" data-toggle="modal" data-target="#tambahBukuModal"><i
-                    class="fa fa-plus"></i>Tambah Buku</button>
-            <a href="{{route('admin.print.books)}}" target="-blank" class="btn btn-secondary"><i
-                    class="fa fa-print"></i>Print</a>
-            <table id="table_data" class="table table-bordered">
+                    class="fa fa-plus"></i>
+                Tambah Data</button>
+            <a href="{{ route('admin.print.books') }}" target="_blank" class="btn btn-secondary"><i
+                    class="fa fa-print"></i> Cetak PDF</a>
+           
+            <hr />
+
+            <table id="table-data" class="table table-bordered">
                 <thead>
                     <tr class="text-center">
                         <th>NO</th>
@@ -27,53 +32,52 @@
                         <th>AKSI</th>
                     </tr>
                 </thead>
-
                 <tbody>
                     @php $no=1; @endphp
-                    @foreach($books as $book)
+                    @foreach ($books as $book)
                     <tr>
-                        <td>{{$no++}}</td>
-                        <td>{{$book->judul}}</td>
-                        <td>{{$book->penulis}}</td>
-                        <td>{{$book->tahun}}</td>
-                        <td>{{$book->penerbit}}</td>
+                        <td>{{ $no++ }}</td>
+                        <td>{{ $book->judul }}</td>
+                        <td>{{ $book->penulis }}</td>
+                        <td>{{ $book->tahun }}</td>
+                        <td>{{ $book->penerbit }}</td>
                         <td>
-                            @if($book->cover !== null){
-                            <img src="{{ asset('storage/cover_buku/'.$book->cover)}}" width="100px" />
-                            }
+                            @if ($book->cover !== null)
+                            <img src="{{ asset('storage/cover_buku/' . $book->cover) }}" width="100px" />
                             @else
-                            [Gambar Tidak Tersedia]
+                            [Gambar tidak tersedia]
                             @endif
                         </td>
-                        <!-- <td>{{$book->id}}</td> -->
                         <td>
-                            <div class="btn-group" role="group" aria-label="Basic Example">
+                            <div class="btn-group" role="group" aria-label="Basic example">
                                 <button type="button" id="btn-edit-buku" class="btn btn-success" data-toggle="modal"
-                                    data-target="#editBukuModal" data-id="{{$book->id}}">Edit</button>
+                                    data-target="#editBukuModal" data-id="{{ $book->id }}">Edit</button>
                                 <button type="button" class="btn btn-danger"
-                                    onclick="deleteConfirmation('{{$book->id}}', '{{$book->judul}}')">Hapus</button>
+                                    onclick="deleteConfirmation('{{ $book->id }}', '{{ $book->judul }}' )">Hapus</button>
                             </div>
                         </td>
                     </tr>
                     @endforeach
                 </tbody>
-
             </table>
         </div>
     </div>
 </div>
 
+<!-- PERMODALAN -->
+
+<!-- TAMBAH DATA -->
 <div class="modal fade" id="tambahBukuModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-tittle" id="exampleModalLabel">Tambah Data Buku</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Tambah Data Buku</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form method="post" action="{{route('admin.book.submit')}}" enctype="multipart/form-data">
+                <form method="post" action="{{ route('admin.book.submit') }}" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
                         <label for="judul">Judul Buku</label>
@@ -93,30 +97,31 @@
                     </div>
                     <div class="form-group">
                         <label for="cover">Cover</label>
-                        <input type="file" class="form-control" name="cover" id="cover" required />
+                        <input type="file" class="form-control" name="cover" id="cover" />
                     </div>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                 <button type="submit" class="btn btn-primary">Kirim</button>
-
                 </form>
             </div>
         </div>
     </div>
 </div>
 
+<!-- UBAH DATA -->
 <div class="modal fade" id="editBukuModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-tittle" id="exampleModalLabel">Edit Data Buku</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Edit Data Buku</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form method="post" action="{{route('admin.book.update')}}" enctype="multipart/form-data">
+                <form method="post" action="{{ route('admin.book.update') }}" enctype="multipart/form-data">
                     @csrf
                     @method('PATCH')
                     <div class="row">
@@ -142,7 +147,7 @@
                             <div class="form-group" id="image-area"></div>
                             <div class="form-group">
                                 <label for="edit-cover">Cover</label>
-                                <input type="file" class="form-control" name="cover" id="edit-cover" required />
+                                <input type="file" class="form-control" name="cover" id="edit-cover" />
                             </div>
                         </div>
                     </div>
@@ -157,10 +162,16 @@
         </div>
     </div>
 </div>
+
+<!-- MODAL IMPORT DATA FORM -->
+
+
+
 @stop
 
 @section('js')
 <script>
+//EDIT
 $(function() {
 
     $(document).on('click', '#btn-edit-buku', function() {
@@ -170,7 +181,7 @@ $(function() {
 
         $.ajax({
             type: "get",
-            url: "{{url('/admin/ajaxadmin/dataBuku')}}/" + id,
+            url: "{{ url('/admin/ajaxadmin/dataBuku') }}/" + id,
             dataType: 'json',
             success: function(res) {
                 $('#edit-judul').val(res.judul);
@@ -182,50 +193,58 @@ $(function() {
 
                 if (res.cover !== null) {
                     $('#image-area').append(
-                        "<img src='" + baseurl + "/storage/cover_buku/" + res.cover +
-                        "'width='200px'/>"
+                        "<img src='" + baseurl + "/storage/cover_buku/" + res
+                        .cover + "' width='200px'/>"
                     );
                 } else {
-                    $('image-area').append('[Gambar Tidak Tersedia]');
+                    $('#image-area').append('[Gambar tidak tersedia]');
                 }
             },
         });
     });
+
 });
 
+//DELETE
 function deleteConfirmation(npm, judul) {
     swal.fire({
         title: "Hapus?",
         type: 'warning',
-        text: "apakah anda yakin akan menghapus data buku dengan judul" + judul + "?!",
+        text: "Apakah anda yakin akan menghapus data buku dengan judul " + judul + "?!",
+
         showCancelButton: !0,
-        confirmButtonText: "Ya, Lakukan",
-        cancelmButtonText: "Tidak, Jangan",
-        reverse: !0
+        confirmButtonText: "Ya, lakukan!",
+        cancelButtonText: "Tidak, batalkan!",
+        reverseButtons: !0
     }).then(function(e) {
-        if (e.value == true) {
+
+        if (e.value === true) {
             var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+
             $.ajax({
                 type: 'POST',
-                url: "admin/books/delete/" + npm,
+                url: "books/delete/" + npm,
                 data: {
                     _token: CSRF_TOKEN
                 },
                 dataType: 'JSON',
-                success: function(result) {
-                    if (result.success == true) {
-                        sqal.fire("Done", result.message, "success");
+                success: function(results) {
+                    if (results.success === true) {
+                        swal.fire("Done!", results.message, "success");
+                        // refresh page after 2 seconds
                         setTimeout(function() {
                             location.reload();
                         }, 1000);
                     } else {
-                        swal.fire("Error", result.message, "error");
+                        swal.fire("Error!", results.message, "error");
                     }
                 }
             });
+
         } else {
             e.dismiss;
         }
+
     }, function(dismiss) {
         return false;
     })

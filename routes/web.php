@@ -53,5 +53,5 @@ Route::post('admin/books/delete/{id}',
     [App\Http\Controllers\AdminController::class, 'delete_book'])->name('admin.book.delete')->middleware('is_admin');
 
 // print pdf
-Route::post('admin/print_books', 
+Route::get('admin/print_books', 
     [App\Http\Controllers\AdminController::class, 'print_book'])->name('admin.print.books')->middleware('is_admin');
